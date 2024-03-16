@@ -1,0 +1,10 @@
+POST http://localhost:8080/exam/examtest/score
+Content-Type: application/json;
+Content-Type: application/json
+
+{
+  "studentName" : "junk",
+  "korScore": 30,
+  "englishScore": 40,
+  "mathScore": 50
+}
