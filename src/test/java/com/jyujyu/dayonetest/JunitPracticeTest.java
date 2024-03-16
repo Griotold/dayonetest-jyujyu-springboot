@@ -1,21 +1,21 @@
 package com.jyujyu.dayonetest;
 
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.List;
-
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class JunitPracticeTest {
 
+    // 언더스코어가 띄어쓰기가 된다.
     @Test
-    public void assertEqualsTest() {
+    public void assert_equals_test() {
         String expect = "something";
         String actual = "something";
 
         Assertions.assertEquals(expect, actual);
     }
-
+    @DisplayName("Assert Not Equals 메소드 테스트")
     @Test
     public void assertNotEqualsTest() {
         String expect = "something";
