@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  local-db:
+    image: mysql:8.0 # mysql:8 대신, mysql:8.0을 사용해주세요!
+    environment:
+      MYSQL_DATABASE: score
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3307:3306" # 호스트의 3307 포트를 컨테이너의 3306 포트에 바인딩합니다.
+    volumes:
+      - ./dbdata:/var/lib/mysql
+  local-db-migrate:
+    image: flyway/flyway:7
+    restart: always
+    environment:
+      - FLYWAY_DB_URL=jdbc:mysql://local-db:3306/score # 이 부분은 그대로 두세요. 'local-db' 서비스 내부의 포트는 변경하지 않았기 때문입니다.
+      - FLYWAY_DB_USER=root
+      - FLYWAY_DB_PASSWORD=password
+    command: migrate
+    volumes:
+      - ../../db/flyway.conf:/flyway/conf/flyway.conf
+      - ../../db/migration:/flyway/sql
