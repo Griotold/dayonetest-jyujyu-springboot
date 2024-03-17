@@ -34,7 +34,76 @@ class StudentScoreServiceTest {
                 givenEnglishScore,
                 givenMathScore
         );
+    }
 
+    @Test
+    @DisplayName("성적 저장 로직 검증 / 60점 이상인 경우")
+    void saveScoreMockTest() throws Exception {
+        // given
+        StudentScoreRepository studentScoreRepository = Mockito.mock(StudentScoreRepository.class);
+        StudentPassRepository studentPassRepository = Mockito.mock(StudentPassRepository.class);
+        StudentFailRepository studentFailRepository = Mockito.mock(StudentFailRepository.class);
+
+        StudentScoreService studentScoreService
+                = new StudentScoreService(studentScoreRepository, studentPassRepository, studentFailRepository);
+
+        String givenStudentName = "jyujyu";
+        String givenExam = "testexam";
+        Integer givenKorScore = 80;
+        Integer givenEnglishScore = 100;
+        Integer givenMathScore = 60;
+
+        // when
+        studentScoreService.saveScore(
+                givenStudentName,
+                givenExam,
+                givenKorScore,
+                givenEnglishScore,
+                givenMathScore
+        );
+
+        // then
+        // 우선, studentScoreRepository 는 무조건 save 가 1번 호출되어야 하고
+        // 평균 점수가 60점 이상이니까 studentPassRepository 의 save 가 1번 호출되어야 한다.
+        // studentFailRepository 의 save 는 호출되어선 안된다.
+        Mockito.verify(studentScoreRepository, Mockito.times(1)).save(Mockito.any());
+        Mockito.verify(studentPassRepository, Mockito.times(1)).save(Mockito.any());
+        Mockito.verify(studentFailRepository, Mockito.times(0)).save(Mockito.any());
+    }
+
+    @Test
+    @DisplayName("성적 저장 로직 검증 / 60점 미만인 경우")
+    void saveScoreMockTest_under60() throws Exception {
+        // given
+        StudentScoreRepository studentScoreRepository = Mockito.mock(StudentScoreRepository.class);
+        StudentPassRepository studentPassRepository = Mockito.mock(StudentPassRepository.class);
+        StudentFailRepository studentFailRepository = Mockito.mock(StudentFailRepository.class);
+
+        StudentScoreService studentScoreService
+                = new StudentScoreService(studentScoreRepository, studentPassRepository, studentFailRepository);
+
+        String givenStudentName = "jyujyu";
+        String givenExam = "testexam";
+        Integer givenKorScore = 60;
+        Integer givenEnglishScore = 50;
+        Integer givenMathScore = 3;
+
+        // when
+        studentScoreService.saveScore(
+                givenStudentName,
+                givenExam,
+                givenKorScore,
+                givenEnglishScore,
+                givenMathScore
+        );
+
+        // then
+        // 우선, studentScoreRepository 는 무조건 save 가 1번 호출되어야 하고
+        // 평균 점수가 60점 이하이니까 studentFailRepository 의 save 가 1번 호출되어야 한다.
+        // studentPasRepository 의 save 는 호출되어선 안된다.
+        Mockito.verify(studentScoreRepository, Mockito.times(1)).save(Mockito.any());
+        Mockito.verify(studentPassRepository, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(studentFailRepository, Mockito.times(1)).save(Mockito.any());
     }
 
 }
