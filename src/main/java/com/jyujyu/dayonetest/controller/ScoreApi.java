@@ -16,7 +16,7 @@ public class ScoreApi {
         return request;
     }
 
-    @GetMapping("/exam{exam}/pass")
+    @GetMapping("/exam/{exam}/pass")
     public List<ExamPassStudentResponse> pass(@PathVariable("exam") String exam) {
         return List.of(
                 new ExamPassStudentResponse("jyujyu", 60.0)
