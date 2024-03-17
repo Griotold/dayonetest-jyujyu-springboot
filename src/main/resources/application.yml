@@ -1,0 +1,42 @@
+#port
+server:
+  port: 8080
+
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      force-response: true
+
+  tomcat:
+    uri-encoding: UTF-8
+
+#datasources
+spring:
+  datasource:
+    url: jdbc:h2:mem:test;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+
+  #hibernate
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 1000
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    open-in-view: false
+
+logging:
+  level:
+    org.hibernate.type: trace # 콘솔창에 조건에 바인딩되는 값 및 조회 결과 출력
+#    com.jyujyu: debug

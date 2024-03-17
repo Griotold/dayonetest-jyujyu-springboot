@@ -11,7 +11,7 @@ services:
     volumes:
       - ./dbdata:/var/lib/mysql
   local-db-migrate:
-    image: flyway/flyway:7
+    image: flyway/flyway:8.5.7
     restart: always
     environment:
       - FLYWAY_DB_URL=jdbc:mysql://local-db:3306/score # 이 부분은 그대로 두세요. 'local-db' 서비스 내부의 포트는 변경하지 않았기 때문입니다.

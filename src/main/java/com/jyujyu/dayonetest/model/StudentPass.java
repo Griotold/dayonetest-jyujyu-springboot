@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class StudentPass {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "studnet_pass_id")
+    @Column(name = "student_pass_id")
     private Long id;
 
     @Column(name = "exam")
