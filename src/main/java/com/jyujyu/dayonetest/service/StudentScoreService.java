@@ -1,6 +1,8 @@
 package com.jyujyu.dayonetest.service;
 
 import com.jyujyu.dayonetest.MyCalculator;
+import com.jyujyu.dayonetest.controller.response.ExamFailStudentResponse;
+import com.jyujyu.dayonetest.controller.response.ExamPassStudentResponse;
 import com.jyujyu.dayonetest.model.StudentFail;
 import com.jyujyu.dayonetest.model.StudentPass;
 import com.jyujyu.dayonetest.model.StudentScore;
@@ -9,6 +11,10 @@ import com.jyujyu.dayonetest.repository.StudentPassRepository;
 import com.jyujyu.dayonetest.repository.StudentScoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class StudentScoreService {
@@ -56,5 +62,23 @@ public class StudentScoreService {
 
             studentFailRepository.save(studentFail);
         }
+    }
+
+    public List<ExamPassStudentResponse> getPassStudents(String exam) {
+        List<StudentPass> studentPasses = studentPassRepository.findAll();
+
+        return studentPasses.stream()
+                .filter((pass) -> pass.getExam().equals(exam))
+                .map((pass) -> new ExamPassStudentResponse(pass.getStudentName(), pass.getAvgScore()))
+                .collect(Collectors.toList());
+    }
+
+    public List<ExamFailStudentResponse> getFailStudents(String exam) {
+        List<StudentFail> studentFails = studentFailRepository.findAll();
+
+        return studentFails.stream()
+                .filter((fail) -> fail.getExam().equals(exam))
+                .map((fail) -> new ExamFailStudentResponse(fail.getStudentName(), fail.getAvgScore()))
+                .collect(Collectors.toList());
     }
 }
