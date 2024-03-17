@@ -1,0 +1,2 @@
+# 불합격 조회 API
+GET http://localhost:8080/exam/examtest/fail
