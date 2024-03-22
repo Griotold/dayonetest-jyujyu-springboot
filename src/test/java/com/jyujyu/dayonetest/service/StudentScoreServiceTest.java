@@ -6,6 +6,7 @@ import com.jyujyu.dayonetest.controller.response.ExamPassStudentResponse;
 import com.jyujyu.dayonetest.model.StudentFail;
 import com.jyujyu.dayonetest.model.StudentPass;
 import com.jyujyu.dayonetest.model.StudentScore;
+import com.jyujyu.dayonetest.model.StudentScoreTestDataBuilder;
 import com.jyujyu.dayonetest.repository.StudentFailRepository;
 import com.jyujyu.dayonetest.repository.StudentPassRepository;
 import com.jyujyu.dayonetest.repository.StudentScoreRepository;
@@ -188,30 +189,19 @@ class StudentScoreServiceTest {
     @Test
     void saveScoreMockTest_over60_argumentCaptor() throws Exception {
         // given
-        String givenStudentName = "jyujyu";
-        String givenExam = "testexam";
-        Integer givenKorScore = 80;
-        Integer givenEnglishScore = 100;
-        Integer givenMathScore = 60;
 
-        StudentScore expectedStudentScore = StudentScore
-                .builder()
-                .studentName(givenStudentName)
-                .exam(givenExam)
-                .korScore(givenKorScore)
-                .englishScore(givenEnglishScore)
-                .mathScore(givenMathScore)
-                .build();
+        // Test Data Builder 패턴 적용
+        StudentScore expectedStudentScore = StudentScoreTestDataBuilder.passed().build();
 
         StudentPass expectedStudentPass = StudentPass
                 .builder()
-                .studentName(givenStudentName)
-                .exam(givenExam)
+                .studentName(expectedStudentScore.getStudentName())
+                .exam(expectedStudentScore.getExam())
                 .avgScore(
                         new MyCalculator()
-                                .add(givenKorScore.doubleValue())
-                                .add(givenEnglishScore.doubleValue())
-                                .add(givenMathScore.doubleValue())
+                                .add(expectedStudentScore.getKorScore().doubleValue())
+                                .add(expectedStudentScore.getEnglishScore().doubleValue())
+                                .add(expectedStudentScore.getMathScore().doubleValue())
                                 .divide(3.0)
                                 .getResult()
 
@@ -223,11 +213,11 @@ class StudentScoreServiceTest {
 
         // when
         studentScoreService.saveScore(
-                givenStudentName,
-                givenExam,
-                givenKorScore,
-                givenEnglishScore,
-                givenMathScore
+                expectedStudentScore.getStudentName(),
+                expectedStudentScore.getExam(),
+                expectedStudentScore.getKorScore(),
+                expectedStudentScore.getEnglishScore(),
+                expectedStudentScore.getMathScore()
         );
 
         // then
@@ -250,30 +240,18 @@ class StudentScoreServiceTest {
     @Test
     void saveScoreMockTest_under60_argumentCaptor() throws Exception {
         // given
-        String givenStudentName = "jyujyu";
-        String givenExam = "testexam";
-        Integer givenKorScore = 60;
-        Integer givenEnglishScore = 50;
-        Integer givenMathScore = 30;
-
-        StudentScore expectedStudentScore = StudentScore
-                .builder()
-                .studentName(givenStudentName)
-                .exam(givenExam)
-                .korScore(givenKorScore)
-                .englishScore(givenEnglishScore)
-                .mathScore(givenMathScore)
-                .build();
+        // Test Data Builder 패턴 적용
+        StudentScore expectedStudentScore = StudentScoreTestDataBuilder.failed().build();
 
         StudentFail expectedStudentFail = StudentFail
                 .builder()
-                .studentName(givenStudentName)
-                .exam(givenExam)
+                .studentName(expectedStudentScore.getStudentName())
+                .exam(expectedStudentScore.getExam())
                 .avgScore(
                         new MyCalculator(0.0)
-                                .add(givenKorScore.doubleValue())
-                                .add(givenEnglishScore.doubleValue())
-                                .add(givenMathScore.doubleValue())
+                                .add(expectedStudentScore.getKorScore().doubleValue())
+                                .add(expectedStudentScore.getEnglishScore().doubleValue())
+                                .add(expectedStudentScore.getMathScore().doubleValue())
                                 .divide(3.0)
                                 .getResult()
                 ).build();
@@ -285,11 +263,11 @@ class StudentScoreServiceTest {
 
         // when
         studentScoreService.saveScore(
-                givenStudentName,
-                givenExam,
-                givenKorScore,
-                givenEnglishScore,
-                givenMathScore
+                expectedStudentScore.getStudentName(),
+                expectedStudentScore.getExam(),
+                expectedStudentScore.getKorScore(),
+                expectedStudentScore.getEnglishScore(),
+                expectedStudentScore.getMathScore()
         );
 
         // then
