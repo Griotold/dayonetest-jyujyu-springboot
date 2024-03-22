@@ -9,6 +9,7 @@ import com.jyujyu.dayonetest.model.StudentScore;
 import com.jyujyu.dayonetest.repository.StudentFailRepository;
 import com.jyujyu.dayonetest.repository.StudentPassRepository;
 import com.jyujyu.dayonetest.repository.StudentScoreRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -20,16 +21,27 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class StudentScoreServiceTest {
+    private StudentScoreService studentScoreService;
+    private StudentScoreRepository studentScoreRepository;
+    private StudentPassRepository studentPassRepository;
+    private StudentFailRepository studentFailRepository;
+
+    @BeforeEach
+    public void beforeEach() {
+        studentScoreRepository = Mockito.mock(StudentScoreRepository.class);
+        studentPassRepository = Mockito.mock(StudentPassRepository.class);
+        studentFailRepository = Mockito.mock(StudentFailRepository.class);
+        studentScoreService = new StudentScoreService(
+                studentScoreRepository,
+                studentPassRepository,
+                studentFailRepository
+        );
+    }
 
     @Test
     @DisplayName("첫번째 Mock 테스트")
     public void firstSaveScoreMockTest() {
         // given
-        StudentScoreService studentScoreService = new StudentScoreService(
-                Mockito.mock(StudentScoreRepository.class),
-                Mockito.mock(StudentPassRepository.class),
-                Mockito.mock(StudentFailRepository.class)
-        );
         String givenStudentName = "jyujyu";
         String givenExam = "testexam";
         Integer givenKorScore = 80;
@@ -50,13 +62,6 @@ class StudentScoreServiceTest {
     @DisplayName("성적 저장 로직 검증 / 60점 이상인 경우")
     void saveScoreMockTest() throws Exception {
         // given
-        StudentScoreRepository studentScoreRepository = Mockito.mock(StudentScoreRepository.class);
-        StudentPassRepository studentPassRepository = Mockito.mock(StudentPassRepository.class);
-        StudentFailRepository studentFailRepository = Mockito.mock(StudentFailRepository.class);
-
-        StudentScoreService studentScoreService
-                = new StudentScoreService(studentScoreRepository, studentPassRepository, studentFailRepository);
-
         String givenStudentName = "jyujyu";
         String givenExam = "testexam";
         Integer givenKorScore = 80;
@@ -85,13 +90,6 @@ class StudentScoreServiceTest {
     @DisplayName("성적 저장 로직 검증 / 60점 미만인 경우")
     void saveScoreMockTest_under60() throws Exception {
         // given
-        StudentScoreRepository studentScoreRepository = Mockito.mock(StudentScoreRepository.class);
-        StudentPassRepository studentPassRepository = Mockito.mock(StudentPassRepository.class);
-        StudentFailRepository studentFailRepository = Mockito.mock(StudentFailRepository.class);
-
-        StudentScoreService studentScoreService
-                = new StudentScoreService(studentScoreRepository, studentPassRepository, studentFailRepository);
-
         String givenStudentName = "jyujyu";
         String givenExam = "testexam";
         Integer givenKorScore = 60;
@@ -120,10 +118,6 @@ class StudentScoreServiceTest {
     @DisplayName("합격자 명단 가져오기 검증")
     void getPassStudentsTest() throws Exception {
         // given
-        StudentScoreRepository studentScoreRepository = Mockito.mock(StudentScoreRepository.class);
-        StudentPassRepository studentPassRepository = Mockito.mock(StudentPassRepository.class);
-        StudentFailRepository studentFailRepository = Mockito.mock(StudentFailRepository.class);
-
         String givenTestExam = "testexam";
 
         StudentPass expected1 = StudentPass.builder().id(1L).studentName("jyujyu").exam(givenTestExam).avgScore(70.0).build();
@@ -136,11 +130,6 @@ class StudentScoreServiceTest {
                 expected2,
                 notExpected1
         ));
-
-        StudentScoreService studentScoreService = new StudentScoreService(studentScoreRepository,
-                studentPassRepository,
-                studentFailRepository);
-
 
         // when
         List<ExamPassStudentResponse> expectedResponses = List.of(expected1, expected2)
@@ -164,10 +153,6 @@ class StudentScoreServiceTest {
     @DisplayName("불합격자 명단 가져오기 검증")
     void getFailStudentsTest() throws Exception {
         // given
-        StudentScoreRepository studentScoreRepository = Mockito.mock(StudentScoreRepository.class);
-        StudentPassRepository studentPassRepository = Mockito.mock(StudentPassRepository.class);
-        StudentFailRepository studentFailRepository = Mockito.mock(StudentFailRepository.class);
-
         String givenTestExam = "testexam";
 
         StudentFail expected1 = StudentFail.builder().id(1L).studentName("jyujyu").exam(givenTestExam).avgScore(30.0).build();
@@ -180,11 +165,6 @@ class StudentScoreServiceTest {
                 expected2,
                 notExpected1
         ));
-
-        StudentScoreService studentScoreService = new StudentScoreService(studentScoreRepository,
-                studentPassRepository,
-                studentFailRepository);
-
 
         // when
         List<ExamFailStudentResponse> expectedResponses = List.of(expected1, expected2)
@@ -208,13 +188,6 @@ class StudentScoreServiceTest {
     @Test
     void saveScoreMockTest_over60_argumentCaptor() throws Exception {
         // given
-        StudentScoreRepository studentScoreRepository = Mockito.mock(StudentScoreRepository.class);
-        StudentPassRepository studentPassRepository = Mockito.mock(StudentPassRepository.class);
-        StudentFailRepository studentFailRepository = Mockito.mock(StudentFailRepository.class);
-
-        StudentScoreService studentScoreService
-                = new StudentScoreService(studentScoreRepository, studentPassRepository, studentFailRepository);
-
         String givenStudentName = "jyujyu";
         String givenExam = "testexam";
         Integer givenKorScore = 80;
@@ -277,13 +250,6 @@ class StudentScoreServiceTest {
     @Test
     void saveScoreMockTest_under60_argumentCaptor() throws Exception {
         // given
-        StudentScoreRepository studentScoreRepository = Mockito.mock(StudentScoreRepository.class);
-        StudentPassRepository studentPassRepository = Mockito.mock(StudentPassRepository.class);
-        StudentFailRepository studentFailRepository = Mockito.mock(StudentFailRepository.class);
-
-        StudentScoreService studentScoreService
-                = new StudentScoreService(studentScoreRepository, studentPassRepository, studentFailRepository);
-
         String givenStudentName = "jyujyu";
         String givenExam = "testexam";
         Integer givenKorScore = 60;
