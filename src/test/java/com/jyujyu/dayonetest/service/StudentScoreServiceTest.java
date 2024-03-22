@@ -118,9 +118,10 @@ class StudentScoreServiceTest {
         // given
         String givenTestExam = "testexam";
 
-        StudentPass expected1 = StudentPass.builder().id(1L).studentName("jyujyu").exam(givenTestExam).avgScore(70.0).build();
-        StudentPass expected2 = StudentPass.builder().id(2L).studentName("griotold").exam(givenTestExam).avgScore(80.0).build();
-        StudentPass notExpected1 = StudentPass.builder().id(3L).studentName("iamnot").exam("secondexam").avgScore(90.0).build();
+        // Fixture Object 패턴 적용
+        StudentPass expected1 = StudentPassFixture.create("jyujyu", givenTestExam);
+        StudentPass expected2 = StudentPassFixture.create("griotold", givenTestExam);
+        StudentPass notExpected1 = StudentPassFixture.create("iamNot", "secondExam");
 
         // studentPassRepository.findAll()을 수행할 때 아래 지정한 List 를 반환하라는 뜻
         Mockito.when(studentPassRepository.findAll()).thenReturn(List.of(
@@ -153,9 +154,10 @@ class StudentScoreServiceTest {
         // given
         String givenTestExam = "testexam";
 
-        StudentFail expected1 = StudentFail.builder().id(1L).studentName("jyujyu").exam(givenTestExam).avgScore(30.0).build();
-        StudentFail expected2 = StudentFail.builder().id(2L).studentName("griotold").exam(givenTestExam).avgScore(40.0).build();
-        StudentFail notExpected1 = StudentFail.builder().id(3L).studentName("iamnot").exam("secondexam").avgScore(50.0).build();
+        // Fixture Object 패턴 적용
+        StudentFail expected1 = StudentFailFixture.create("jyujyu", givenTestExam);
+        StudentFail expected2 = StudentFailFixture.create("griotold", givenTestExam);
+        StudentFail notExpected1 = StudentFailFixture.create("iamnot", "secondExam");
 
         // studentPassRepository.findAll()을 수행할 때 아래 지정한 List 를 반환하라는 뜻
         Mockito.when(studentFailRepository.findAll()).thenReturn(List.of(
@@ -190,19 +192,7 @@ class StudentScoreServiceTest {
         // Test Data Builder 패턴 적용
         StudentScore expectedStudentScore = StudentScoreTestDataBuilder.passed().build();
 
-        StudentPass expectedStudentPass = StudentPass
-                .builder()
-                .studentName(expectedStudentScore.getStudentName())
-                .exam(expectedStudentScore.getExam())
-                .avgScore(
-                        new MyCalculator()
-                                .add(expectedStudentScore.getKorScore().doubleValue())
-                                .add(expectedStudentScore.getEnglishScore().doubleValue())
-                                .add(expectedStudentScore.getMathScore().doubleValue())
-                                .divide(3.0)
-                                .getResult()
-
-                ).build();
+        StudentPass expectedStudentPass = StudentPassFixture.create(expectedStudentScore);
 
         // ArgumentCaptor -> 인자값 캡쳐해서 검증
         ArgumentCaptor<StudentScore> studentScoreArgumentCaptor = ArgumentCaptor.forClass(StudentScore.class);
@@ -240,18 +230,7 @@ class StudentScoreServiceTest {
         // FixtureObject 패턴 적용
         StudentScore expectedStudentScore = StudentScoreFixture.failed();
 
-        StudentFail expectedStudentFail = StudentFail
-                .builder()
-                .studentName(expectedStudentScore.getStudentName())
-                .exam(expectedStudentScore.getExam())
-                .avgScore(
-                        new MyCalculator(0.0)
-                                .add(expectedStudentScore.getKorScore().doubleValue())
-                                .add(expectedStudentScore.getEnglishScore().doubleValue())
-                                .add(expectedStudentScore.getMathScore().doubleValue())
-                                .divide(3.0)
-                                .getResult()
-                ).build();
+        StudentFail expectedStudentFail = StudentFailFixture.create(expectedStudentScore);
 
 
         // ArgumentCaptor -> 인자값 캡쳐해서 검증
