@@ -3,10 +3,7 @@ package com.jyujyu.dayonetest.service;
 import com.jyujyu.dayonetest.MyCalculator;
 import com.jyujyu.dayonetest.controller.response.ExamFailStudentResponse;
 import com.jyujyu.dayonetest.controller.response.ExamPassStudentResponse;
-import com.jyujyu.dayonetest.model.StudentFail;
-import com.jyujyu.dayonetest.model.StudentPass;
-import com.jyujyu.dayonetest.model.StudentScore;
-import com.jyujyu.dayonetest.model.StudentScoreTestDataBuilder;
+import com.jyujyu.dayonetest.model.*;
 import com.jyujyu.dayonetest.repository.StudentFailRepository;
 import com.jyujyu.dayonetest.repository.StudentPassRepository;
 import com.jyujyu.dayonetest.repository.StudentScoreRepository;
@@ -240,8 +237,8 @@ class StudentScoreServiceTest {
     @Test
     void saveScoreMockTest_under60_argumentCaptor() throws Exception {
         // given
-        // Test Data Builder 패턴 적용
-        StudentScore expectedStudentScore = StudentScoreTestDataBuilder.failed().build();
+        // FixtureObject 패턴 적용
+        StudentScore expectedStudentScore = StudentScoreFixture.failed();
 
         StudentFail expectedStudentFail = StudentFail
                 .builder()
